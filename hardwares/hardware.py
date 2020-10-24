@@ -8,8 +8,3 @@ class Hardware:
     def status(self):
         raise NotImplementedError
 
-    def register(self):
-        return
-
-    def update(self):
-        return

@@ -2,6 +2,7 @@ from hardwares import cpu, disk, network, memory
 import platform
 import psutil
 import datetime
+import time
 
 
 class Equipment:
@@ -11,6 +12,8 @@ class Equipment:
         self._disk = disk.Disk(self._system)
         self._memory = memory.Memory(self._system)
         self._network = network.Network(self._system)
+        self._network_mac = self._network.basic_information()['network_mac']
+        self._boot_time_in_timestamp = int(psutil.boot_time())
 
     def basic_information(self):
         _basic_information = {'cpu': self._cpu.basic_information(),
@@ -21,12 +24,13 @@ class Equipment:
                               'network_name': platform.node(),
                               'platform': platform.platform(),
                               'architecture': platform.architecture()[0],
-                              'boot_time_in_timestamp': int(psutil.boot_time()),
+                              'boot_time_in_timestamp': self._boot_time_in_timestamp,
                               'boot_time_in_string': datetime.datetime.fromtimestamp(psutil.boot_time()).strftime(
                                   "%Y-%m-%d %H: %M: %S"),
                               'user': psutil.users()[0].name,
                               'host': psutil.users()[0].host,
-                              'data_type': 30}
+                              'data_type': 30,
+                              'update_time': int(time.time())}
         return _basic_information
 
     def status(self):
@@ -34,7 +38,11 @@ class Equipment:
                    'disk': self._disk.status(),
                    'memory': self._memory.status(),
                    'network': self._network.status(),
-                   'data_type': 31}
+                   'data_type': 31,
+                   'equipment_id': 1,
+                   'update_time': int(time.time()),
+                   'network_mac': self._network_mac,
+                   'running_time': int(time.time()) - self._boot_time_in_timestamp}
         return _status
 
 
