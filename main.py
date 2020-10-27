@@ -19,6 +19,8 @@ if __name__ == "__main__":
     equipment = Equipment()
 
     config = Config()
+    interval = config.get_value("interval")
+
     host, port = config.get_data_center_config()
     client = Client(host, port)
     client.connect()
@@ -26,7 +28,7 @@ if __name__ == "__main__":
     register(equipment, client)
 
     scheduler = BackgroundScheduler()
-    scheduler.add_job(update, 'interval', seconds=1, max_instances=100, id='update', args=[equipment, client])
+    scheduler.add_job(update, 'interval', seconds=interval, max_instances=100, id='update', args=[equipment, client])
     scheduler.start()
     scheduler_paused = False
 

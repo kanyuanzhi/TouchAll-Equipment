@@ -1,9 +1,10 @@
 {
   "equipment": {
-    "id": 1
+    "id": 2
   },
   "data_center": {
     "host": "119.28.16.179",
     "port": 9090
-  }
+  },
+  "interval": 1
 }

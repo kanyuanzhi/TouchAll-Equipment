@@ -15,3 +15,9 @@ class Config:
     def get_equipment_id(self):
         equipment_id = self.config["equipment"]["id"]
         return equipment_id
+
+    def get_value(self, *args):
+        value = self.config
+        for k in args:
+            value = value[k]
+        return value

@@ -1,5 +1,6 @@
 import psutil
 from hardwares.hardware import Hardware
+from socket import AddressFamily
 
 
 class Network(Hardware):
@@ -15,10 +16,27 @@ class Network(Hardware):
     def basic_information(self):
         net_if_addrs = psutil.net_if_addrs()
         if self._system == "Windows":
-            self._network_mac = net_if_addrs['en0'][0].address
+            eth0_entries = net_if_addrs['eth0']
+        elif self._system == "Linux":
+            eth0_entries = net_if_addrs['eth0']
+            for entry in eth0_entries:
+                family = entry.family
+                if family == AddressFamily.AF_INET:
+                    self._network_ip = entry.address
+                if family == AddressFamily.AF_PACKET:
+                    self._network_mac = entry.address
         else:
-            self._network_mac = net_if_addrs['en6'][0].address
-        self._network_ip = ""
+            eth0_entries = net_if_addrs['en6']
+            for entry in eth0_entries:
+                family = entry.family
+                if family == AddressFamily.AF_LINK:
+                    self._network_mac = entry.address
+            eth0_entries = net_if_addrs['en0']
+            for entry in eth0_entries:
+                family = entry.family
+                if family == AddressFamily.AF_INET:
+                    self._network_ip = entry.address
+
         _basic_information = {'network_mac': self._network_mac,
                               'network_ip': self._network_ip}
         return _basic_information
