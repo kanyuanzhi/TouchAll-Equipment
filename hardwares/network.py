@@ -14,7 +14,10 @@ class Network(Hardware):
 
     def basic_information(self):
         net_if_addrs = psutil.net_if_addrs()
-        self._network_mac = net_if_addrs['en6'][0].address
+        if self._system == "Windows":
+            self._network_mac = net_if_addrs['en0'][0].address
+        else:
+            self._network_mac = net_if_addrs['en6'][0].address
         self._network_ip = ""
         _basic_information = {'network_mac': self._network_mac,
                               'network_ip': self._network_ip}

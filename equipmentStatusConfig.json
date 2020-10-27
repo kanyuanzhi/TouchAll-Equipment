@@ -1,0 +1,9 @@
+{
+  "equipment": {
+    "id": 1
+  },
+  "data_center": {
+    "host": "119.28.16.179",
+    "port": 9090
+  }
+}

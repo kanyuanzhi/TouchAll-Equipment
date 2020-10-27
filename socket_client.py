@@ -24,7 +24,8 @@ class Client:
                 sleep(1)
             except Exception as e:
                 self.conn = socket.socket()
-                print(str(e))
+                count += 1
+                print(str(e) + ": %d" % count)
                 sleep(1)
 
     def send(self, data):

@@ -3,6 +3,7 @@ import platform
 import psutil
 import datetime
 import time
+from utils.config_utils import Config
 
 
 class Equipment:
@@ -14,6 +15,8 @@ class Equipment:
         self._network = network.Network(self._system)
         self._network_mac = self._network.basic_information()['network_mac']
         self._boot_time_in_timestamp = int(psutil.boot_time())
+        config = Config()
+        self._equipment_id = config.get_equipment_id()
 
     def basic_information(self):
         _basic_information = {'cpu': self._cpu.basic_information(),
@@ -30,6 +33,7 @@ class Equipment:
                               'user': psutil.users()[0].name,
                               'host': psutil.users()[0].host,
                               'data_type': 30,
+                              'equipment_id': self._equipment_id,
                               'update_time': int(time.time())}
         return _basic_information
 
@@ -39,7 +43,7 @@ class Equipment:
                    'memory': self._memory.status(),
                    'network': self._network.status(),
                    'data_type': 31,
-                   'equipment_id': 1,
+                   'equipment_id': self._equipment_id,
                    'update_time': int(time.time()),
                    'network_mac': self._network_mac,
                    'running_time': int(time.time()) - self._boot_time_in_timestamp}

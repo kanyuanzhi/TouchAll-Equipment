@@ -3,7 +3,7 @@ import json
 
 class Config:
     def __init__(self):
-        with open("./config.json") as f:
+        with open("./equipmentStatusConfig.json") as f:
             config_data = f.read()
             self.config = json.loads(config_data)
 
@@ -11,3 +11,7 @@ class Config:
         host = self.config["data_center"]["host"]
         port = self.config["data_center"]["port"]
         return host, port
+
+    def get_equipment_id(self):
+        equipment_id = self.config["equipment"]["id"]
+        return equipment_id
