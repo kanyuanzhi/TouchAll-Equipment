@@ -3,7 +3,7 @@ import platform
 import psutil
 import datetime
 import time
-from utils.config_utils import Config
+from config_utils import Config
 
 
 class Equipment:

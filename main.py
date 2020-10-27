@@ -1,6 +1,6 @@
 from equipment import Equipment
 from socket_client import Client
-from utils.config_utils import Config
+from config_utils import Config
 from apscheduler.schedulers.background import BackgroundScheduler
 
 
