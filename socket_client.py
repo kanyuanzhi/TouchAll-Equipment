@@ -4,25 +4,26 @@ from time import sleep
 
 
 class Client:
-    def __init__(self, address, port):
+    def __init__(self, address, port, scheduler):
         self.address = address
         self.port = port
+        self.scheduler = scheduler
         self.conn = socket.socket()
-        self.connection_refused = True
+        self.is_reconnecting = False
+        self.update_job_started = False
 
     def connect(self):
         count = 0
-        while self.connection_refused:
+        while True:
             try:
                 self.conn.connect((self.address, self.port))
+                self.is_reconnecting = False
                 print("Connection success after %d reconnection(s)" % count)
-                self.connection_refused = False
-            except ConnectionRefusedError:
-                self.conn = socket.socket()
-                count += 1
-                print("Connection refused, reconnecting... %d" % count)
-                sleep(1)
+                if self.update_job_started:
+                    self.scheduler.resume_job('update')
+                return
             except Exception as e:
+                self.is_reconnecting = True
                 self.conn = socket.socket()
                 count += 1
                 print(str(e) + ": %d" % count)
@@ -32,11 +33,14 @@ class Client:
         data_json = json.dumps(data)
         data_byte = data_json.encode()
         data_byte = "header".encode() + len(data_byte).to_bytes(length=4, byteorder="big", signed=True) + data_byte
-        try:
-            self.conn.send(data_byte)
-        except BrokenPipeError:
-            self.connection_refused = True
-            print("Broken pipe error, send data failed, waiting for reconnection...")
-        except Exception as e:
-            self.connection_refused = True
-            print(str(e) + "waiting for reconnection...")
+        if self.is_reconnecting:
+            return
+        else:
+            try:
+                self.conn.send(data_byte)
+                print("sending data")
+            except Exception as e:
+                print(str(e) + ": Reconnecting...\n")
+                self.scheduler.pause_job('update')
+                self.conn = socket.socket()
+                self.connect()

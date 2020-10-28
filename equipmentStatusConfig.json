@@ -1,6 +1,7 @@
 {
-  "equipment": {
-    "id": 2
+  "test_mode": true,
+  "test": {
+    "network_mac": "00:00:00:00:00:00"
   },
   "data_center": {
     "host": "119.28.16.179",

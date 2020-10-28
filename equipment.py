@@ -13,10 +13,12 @@ class Equipment:
         self._disk = disk.Disk(self._system)
         self._memory = memory.Memory(self._system)
         self._network = network.Network(self._system)
-        self._network_mac = self._network.basic_information()['network_mac']
         self._boot_time_in_timestamp = int(psutil.boot_time())
         config = Config()
-        self._equipment_id = config.get_equipment_id()
+        self._test_mode = config.get_value('test_mode')
+        self._test_network_mac = config.get_value('test', 'network_mac')
+        self._network_mac = self._test_network_mac if self._test_mode else self._network.basic_information()[
+            'network_mac']
 
     def basic_information(self):
         _basic_information = {'cpu': self._cpu.basic_information(),
@@ -33,8 +35,9 @@ class Equipment:
                               'user': psutil.users()[0].name,
                               'host': psutil.users()[0].host,
                               'data_type': 30,
-                              'equipment_id': self._equipment_id,
                               'update_time': int(time.time())}
+        if self._test_mode:
+            _basic_information['network']['network_mac'] = self._test_network_mac
         return _basic_information
 
     def status(self):
@@ -43,7 +46,6 @@ class Equipment:
                    'memory': self._memory.status(),
                    'network': self._network.status(),
                    'data_type': 31,
-                   'equipment_id': self._equipment_id,
                    'update_time': int(time.time()),
                    'network_mac': self._network_mac,
                    'running_time': int(time.time()) - self._boot_time_in_timestamp}
