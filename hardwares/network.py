@@ -16,7 +16,13 @@ class Network(Hardware):
     def basic_information(self):
         net_if_addrs = psutil.net_if_addrs()
         if self._system == "Windows":
-            eth0_entries = net_if_addrs['eth0']
+            eth0_entries = net_if_addrs['本地连接']
+            for entry in eth0_entries:
+                family = entry.family
+                if family == AddressFamily.AF_INET:
+                    self._network_ip = entry.address
+                if family == AddressFamily.AF_LINK:
+                    self._network_mac = entry.address
         elif self._system == "Linux":
             eth0_entries = net_if_addrs['eth0']
             for entry in eth0_entries:

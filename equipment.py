@@ -14,11 +14,9 @@ class Equipment:
         self._memory = memory.Memory(self._system)
         self._network = network.Network(self._system)
         self._boot_time_in_timestamp = int(psutil.boot_time())
-        config = Config()
-        self._test_mode = config.get_value('test_mode')
-        self._test_network_mac = config.get_value('test', 'network_mac')
-        self._network_mac = self._test_network_mac if self._test_mode else self._network.basic_information()[
-            'network_mac']
+        self.equipment_id = 0
+
+
 
     def basic_information(self):
         _basic_information = {'cpu': self._cpu.basic_information(),
@@ -36,8 +34,6 @@ class Equipment:
                               'host': psutil.users()[0].host,
                               'data_type': 30,
                               'update_time': int(time.time())}
-        if self._test_mode:
-            _basic_information['network']['network_mac'] = self._test_network_mac
         return _basic_information
 
     def status(self):
@@ -47,8 +43,8 @@ class Equipment:
                    'network': self._network.status(),
                    'data_type': 31,
                    'update_time': int(time.time()),
-                   'network_mac': self._network_mac,
-                   'running_time': int(time.time()) - self._boot_time_in_timestamp}
+                   'running_time': int(time.time()) - self._boot_time_in_timestamp,
+                   'equipment_id': self.equipment_id}
         return _status
 
 
