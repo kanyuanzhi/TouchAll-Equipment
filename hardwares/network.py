@@ -4,8 +4,9 @@ from socket import AddressFamily
 
 
 class Network(Hardware):
-    def __init__(self, system):
+    def __init__(self, system, network_card):
         super().__init__(system)
+        self._network_card = network_card
         self._network_mac = ""  # mac地址
         self._network_ip = ""
         self._network_send_gigabytes = 0
@@ -16,30 +17,27 @@ class Network(Hardware):
     def basic_information(self):
         net_if_addrs = psutil.net_if_addrs()
         if self._system == "Windows":
-            eth0_entries = net_if_addrs['本地连接']
-            for entry in eth0_entries:
+            network_entries = net_if_addrs[self._network_card]
+            for entry in network_entries:
                 family = entry.family
                 if family == AddressFamily.AF_INET:
                     self._network_ip = entry.address
                 if family == AddressFamily.AF_LINK:
                     self._network_mac = entry.address
         elif self._system == "Linux":
-            eth0_entries = net_if_addrs['eth0']
-            for entry in eth0_entries:
+            network_entries = net_if_addrs[self._network_card]
+            for entry in network_entries:
                 family = entry.family
                 if family == AddressFamily.AF_INET:
                     self._network_ip = entry.address
                 if family == AddressFamily.AF_PACKET:
                     self._network_mac = entry.address
         else:
-            eth0_entries = net_if_addrs['en6']
-            for entry in eth0_entries:
+            network_entries = net_if_addrs[self._network_card]
+            for entry in network_entries:
                 family = entry.family
                 if family == AddressFamily.AF_LINK:
                     self._network_mac = entry.address
-            eth0_entries = net_if_addrs['en0']
-            for entry in eth0_entries:
-                family = entry.family
                 if family == AddressFamily.AF_INET:
                     self._network_ip = entry.address
 

@@ -7,16 +7,14 @@ from config_utils import Config
 
 
 class Equipment:
-    def __init__(self):
+    def __init__(self, network_card):
         self._system = platform.system()
         self._cpu = cpu.CPU(self._system)
         self._disk = disk.Disk(self._system)
         self._memory = memory.Memory(self._system)
-        self._network = network.Network(self._system)
+        self._network = network.Network(self._system, network_card)
         self._boot_time_in_timestamp = int(psutil.boot_time())
         self.equipment_id = 0
-
-
 
     def basic_information(self):
         _basic_information = {'cpu': self._cpu.basic_information(),
