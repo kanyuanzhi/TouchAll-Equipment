@@ -1,5 +1,5 @@
 {
-  "network_card": "en6",
+  "network_card": "en0",
   "data_center": {
     "host": "localhost",
     "port": 9090

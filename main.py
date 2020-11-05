@@ -23,7 +23,7 @@ if __name__ == "__main__":
     network_card = config.get_value("network_card")
     host, port = config.get_data_center_config()
 
-    equipment = Equipment()
+    equipment = Equipment(network_card)
 
     scheduler = BlockingScheduler()
     client = Client(host, port, scheduler)
