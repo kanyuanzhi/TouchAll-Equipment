@@ -42,7 +42,8 @@ class Network(Hardware):
                     self._network_ip = entry.address
 
         _basic_information = {'network_mac': self._network_mac,
-                              'network_ip': self._network_ip}
+                              'network_ip': self._network_ip,
+                              'network_card': self._network_card}
         return _basic_information
 
     def status(self):
