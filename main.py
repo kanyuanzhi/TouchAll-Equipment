@@ -40,7 +40,7 @@ if __name__ == "__main__":
         equipment.equipment_id = message_json["equipment_id"]
         text = "设备在数据中心注册成功，当前设备ID: {}"
     else:
-        equipment.equipment_id = randint(65525, 70000)
+        equipment.equipment_id = randint(65535, 70000)
         text = "当前数据中心未连接至mysql，设备无法获取正确ID，已经为设备分配临时ID: {}供测试使用"
     print(text.format(equipment.equipment_id))
     scheduler.add_job(update, 'interval', seconds=interval, max_instances=100, id='update', args=[equipment, client])

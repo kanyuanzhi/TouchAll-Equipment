@@ -23,7 +23,7 @@ class Equipment:
                               'network_name': platform.node(),
                               'platform': platform.platform(),
                               'architecture': platform.architecture()[0],
-                              'processor':platform.processor(),
+                              'processor': platform.processor(),
                               'boot_time': self._boot_time,
                               'user': psutil.users()[0].name,
                               'host': psutil.users()[0].host,
