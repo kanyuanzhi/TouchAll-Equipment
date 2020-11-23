@@ -16,11 +16,13 @@ class Disk(Hardware):
     def basic_information(self):
         self._disk_partitions = psutil.disk_partitions(all=False)
         if self._system == "Windows":
+            _disk_size = 0
             for partition in self._disk_partitions:
                 if partition.fstype == "NTFS":
                     mount = partition.mountpoint
                     disk_usage = psutil.disk_usage(mount)
-                    self._disk_size += round(disk_usage.total / 1024 / 1024 / 1024, 1)
+                    _disk_size += round(disk_usage.total / 1024 / 1024 / 1024, 1)
+            self._disk_size = _disk_size
         else:
             disk_usage = psutil.disk_usage('/')
             self._disk_size = round(disk_usage.total / 1024 / 1024 / 1024, 1)
@@ -30,12 +32,16 @@ class Disk(Hardware):
     def status(self):
         self._disk_partitions = psutil.disk_partitions(all=False)
         if self._system == "Windows":
+            _disk_used = 0
+            _disk_available = 0
             for partition in self._disk_partitions:
                 if partition.fstype == "NTFS":
                     mount = partition.mountpoint
                     disk_usage = psutil.disk_usage(mount)
-                    self._disk_used += round(disk_usage.used / 1024 / 1024 / 1024, 1)
-                    self._disk_available += round(disk_usage.free / 1024 / 1024 / 1024, 1)
+                    _disk_used += round(disk_usage.used / 1024 / 1024 / 1024, 1)
+                    _disk_available += round(disk_usage.free / 1024 / 1024 / 1024, 1)
+            self._disk_used = _disk_used
+            self._disk_available = _disk_available
         else:
             disk_usage = psutil.disk_usage('/')
             self._disk_used = round(disk_usage.used / 1024 / 1024 / 1024, 1)

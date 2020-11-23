@@ -32,13 +32,13 @@ class Client:
     def send(self, data):
         data_json = json.dumps(data)
         data_byte = data_json.encode()
-        data_byte = "header".encode() + len(data_byte).to_bytes(length=4, byteorder="big", signed=True) + data_byte
+        data_byte = "header".encode() + len(data_byte).to_bytes(length=4, byteorder="little", signed=True) + data_byte
         if self.is_reconnecting:
             return
         else:
             try:
                 self.conn.send(data_byte)
-                print("sending data")
+                print(data)
             except Exception as e:
                 print(str(e) + ": Reconnecting...\n")
                 self.scheduler.pause_job('update')
